@@ -20,18 +20,13 @@ RUN apt-get update && \
         python3-dev --no-install-recommends \
         procps \
         procs && \
-    pip install --no-cache-dir "matrix-nio[e2e]" --break-system-packages && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /var/log/supervisor /var/run
+        cron && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy supervisord config from your git-tracked file
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN pip install --no-cache-dir 'hermes-agent[matrix]' --break-system-packages
 
 # Ensure the config directory exists and has the right ownership
 RUN mkdir -p /root/.hermes && chown -R 1000:1000 /root/.hermes
 
-# Switch back to your user ID to keep permissions clean
+# Switch back to root to keep permissions clean
 USER 1000
-
-# Use supervisord to run both gateway and matrix
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
