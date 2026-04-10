@@ -19,6 +19,7 @@ services:
       - $HOME/.hermes:/opt/data:Z
       - .:/opt/docker:ro
       - ./share:/opt/share:Z
+      - /var/lib/syncthing/obsidian:/opt/obsidian:Z
     # Uncomment to forward specific env vars instead of using .env file:
     #environment:
     #  - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
