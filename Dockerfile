@@ -26,10 +26,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Required for Matrix support
-RUN pip install --no-cache-dir 'hermes-agent[matrix]' --break-system-packages
-
-# Python packages (persisted in venv or installed at build)
-RUN pip install --no-cache-dir \
+RUN pip install --no-cache-dir --break-system-packages \
+    'hermes-agent[matrix]' \
+    # Python packages (persisted in venv or installed at build)
     google-api-python-client \
     google-auth-oauthlib \
     google-auth-httplib2 \
