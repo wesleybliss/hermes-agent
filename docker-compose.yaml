@@ -16,7 +16,8 @@ services:
       - $HOME/.hermes/.env
     command: gateway run
     volumes:
-      - ~/.hermes:/opt/data:Z
+      - $HOME/.hermes:/opt/data:Z
+      - .:/opt/docker:ro
       - ./share:/opt/share:Z
     # Uncomment to forward specific env vars instead of using .env file:
     #environment:

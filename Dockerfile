@@ -25,7 +25,18 @@ RUN apt-get update && \
         jq && \
     rm -rf /var/lib/apt/lists/*
 
+# Required for Matrix support
 RUN pip install --no-cache-dir 'hermes-agent[matrix]' --break-system-packages
+
+# Python packages (persisted in venv or installed at build)
+RUN pip install --no-cache-dir \
+    google-api-python-client \
+    google-auth-oauthlib \
+    google-auth-httplib2 \
+    playwright
+
+# Install browsers
+RUN playwright install chromium
 
 # Ensure the config directory exists and has the right ownership
 RUN mkdir -p /root/.hermes && chown -R 1000:1000 /root/.hermes
