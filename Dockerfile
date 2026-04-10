@@ -3,7 +3,7 @@ FROM nousresearch/hermes-agent:latest
 # Switch to root to install system dependencies and python libs
 USER root
 
-# Install libolm (required for Matrix E2EE), supervisord, and the matrix-nio package
+# Install libolm (required for Matrix E2EE), and the matrix-nio package
 # The image is Debian-based, so we use apt
 RUN apt-get update && \
     apt-get install -y \
@@ -16,11 +16,13 @@ RUN apt-get update && \
         pkg-config \
         libffi-dev \
         libssl-dev \
-        supervisor \
         python3-dev --no-install-recommends \
         procps \
-        procs && \
-        cron && \
+        procs \
+        cron \
+        htop \
+        nano \
+        jq && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir 'hermes-agent[matrix]' --break-system-packages

@@ -5,19 +5,24 @@ services:
     build: .
     container_name: hermes
     restart: unless-stopped
-    user: "1000:1000"
+    
+    # For running locally on a laptop/etc., use current user
+    #user: "1000:1000"
+    
+    # For running on a VPS, use root
+    user: root
+    
     env_file:
-      - ~/.hermes/.env
+      - $HOME/.hermes/.env
     command: gateway run
-    #command: supervisord
     volumes:
       - ~/.hermes:/opt/data:Z
       - ./share:/opt/share:Z
     # Uncomment to forward specific env vars instead of using .env file:
-    environment:
-    #   - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    #   - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    #environment:
+    #  - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    #  - OPENAI_API_KEY=${OPENAI_API_KEY}
+    #  - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     deploy:
       resources:
         limits:
