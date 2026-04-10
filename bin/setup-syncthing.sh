@@ -8,3 +8,7 @@ sudo chown -R syncthing:syncthing /var/lib/syncthing
 
 sudo systemctl disable syncthing@syncthing
 sudo systemctl start syncthing@syncthing
+
+# sudo systemctl restart syncthing@syncthing
+
+echo 'Run syncthing generate --gui-password='<pass>' --gui-user=hermes to set a GUI account'
