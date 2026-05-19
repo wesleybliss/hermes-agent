@@ -5,7 +5,7 @@ FILENAME="/root/checkpoints/hermes_$TS"
 
 echo "Creating checkpoint..."
 echo "> $FILENAME"
-podman container checkpoint --export="$FILENAME" hermes
+podman container checkpoint --tcp-established --export="$FILENAME" hermes
 
 echo "Checkpoint created"
 echo "Use hermes-restore-checkpoint <filename> to restore the container"
