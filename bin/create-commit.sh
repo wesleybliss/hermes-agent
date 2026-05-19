@@ -1,37 +1,36 @@
 #!/usr/bin/env bash
 
-# Exit immediately if a command exits with a non-zero status
 set -e
 
 TS=$(date '+%Y-%m-%d_%H-%M-%S')
-FILENAME="/root/checkpoints/hermes_$TS.tar"
-
-# Ensure the backup directory exists
-mkdir -p /root/checkpoints
+BACKUP_IMAGE="hermes-backup:$TS"
 
 echo "================================================================="
-echo "⚠️  WARNING: This script will STOP the 'hermes' container."
-echo "   It will create a checkpoint while stopped, then restart it."
+echo "⚠️  WARNING: This script will STOP the 'hermes' container"
+echo "   and create a local filesystem backup image."
 echo "================================================================="
 read -p "Are you sure you want to proceed? (y/N): " CONFIRM
 
-# Convert response to lowercase and check
 if [[ ! "${CONFIRM,,}" =~ ^(yes|y)$ ]]; then
     echo "Aborting. No changes made."
     exit 0
 fi
 
-echo "Creating checkpoint..."
-echo "> $FILENAME"
+echo "Stopping 'hermes' container cleanly..."
+podman stop hermes
 
-# Podman snapshots the running memory state here, then shuts down the container.
-# We keep --tcp-established just in case it has active socket connections.
-podman container checkpoint --tcp-established --export="$FILENAME" hermes
+echo "Creating backup image..."
+echo "> $BACKUP_IMAGE"
+podman commit hermes "$BACKUP_IMAGE"
 
-echo "Checkpoint created"
-echo "Use hermes-restore-checkpoint <filename> to restore the container"
+echo "-----------------------------------------------------------------"
+echo "✅ Backup image created successfully!"
+echo "If your maintenance fails, you can restore by running:"
+echo "  1. podman rm -f hermes"
+echo "  2. podman run -d --name hermes [YOUR-STARTUP-FLAGS] $BACKUP_IMAGE"
+echo "-----------------------------------------------------------------"
 
-echo "Restarting container"
+echo "Starting container back up for maintenance..."
 podman start hermes
 
 # If you are modifying files inside the container's root filesystem and
