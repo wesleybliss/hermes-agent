@@ -21,11 +21,11 @@ if [[ ! "${CONFIRM,,}" =~ ^(yes|y)$ ]]; then
     exit 0
 fi
 
-echo "Stopping 'hermes' container..."
-podman stop hermes
-
 echo "Creating checkpoint..."
 echo "> $FILENAME"
+
+# Podman snapshots the running memory state here, then shuts down the container.
+# We keep --tcp-established just in case it has active socket connections.
 podman container checkpoint --tcp-established --export="$FILENAME" hermes
 
 echo "Checkpoint created"
