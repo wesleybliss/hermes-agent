@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 TS=$(date '+%Y-%m-%d_%H-%M-%S')
-FILENAME="/root/checkpoints/hermes_$TS"
+FILENAME="/root/checkpoints/hermes_$TS.tar"
 
 echo "Creating checkpoint..."
 echo "> $FILENAME"
