@@ -1,5 +1,6 @@
 version: "3.8"
 services:
+  
   hermes:
     #image: nousresearch/hermes-agent:latest
     build: .
@@ -32,3 +33,29 @@ services:
         limits:
           memory: 8G
           cpus: "2.0"
+  
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"  # You will access the UI via http://<your-tailscale-vps-ip>:3000
+    volumes:
+      - open-webui-data:/app/backend/data
+    environment:
+      # Disable local Ollama bundling since we are connecting to Hermes
+      - ENABLE_OLLAMA_API=False
+      
+      # Route directly to your Hermes container over Docker's internal network
+      - OPENAI_API_BASE_URL=http://hermes:8642/v1
+      
+      # This needs to match the API key set inside your $HOME/.hermes/.env file
+      - OPENAI_API_KEY=your-hermes-api-secret-key
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+  
+volumes:
+  open-webui-data:
