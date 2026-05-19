@@ -1,7 +1,28 @@
 #!/usr/bin/env bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 TS=$(date '+%Y-%m-%d_%H-%M-%S')
 FILENAME="/root/checkpoints/hermes_$TS.tar"
+
+# Ensure the backup directory exists
+mkdir -p /root/checkpoints
+
+echo "================================================================="
+echo "⚠️  WARNING: This script will STOP the 'hermes' container."
+echo "   It will create a checkpoint while stopped, then restart it."
+echo "================================================================="
+read -p "Are you sure you want to proceed? (y/N): " CONFIRM
+
+# Convert response to lowercase and check
+if [[ ! "${CONFIRM,,}" =~ ^(yes|y)$ ]]; then
+    echo "Aborting. No changes made."
+    exit 0
+fi
+
+echo "Stopping 'hermes' container..."
+podman stop hermes
 
 echo "Creating checkpoint..."
 echo "> $FILENAME"
