@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+    
+    postgres:
+        image: postgres:alpine
+        container_name: postgres
+        env_file: .env
+        environment:
+            POSTGRES_USER: postgres
+            #POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: local
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres -d local"]
+            interval: 2s
+            timeout: 5s
+            retries: 10
+            start_period: 5s
+    
+    pgweb:
+        image: sosedoff/pgweb:latest
+        container_name: pgweb
+        env_file: .env
+        ports:
+            - "8081:8081"
+        depends_on:
+            postgres:
+                condition: service_healthy
+    
+    backup:
+        image: postgres:alpine
+        container_name: pg-backup
+        environment:
+            PGHOST: postgres
+            PGUSER: postgres
+            #PGPASSWORD: postgres
+            PGDATABASE: local
+        volumes:
+            - ./backups:/backups
+            - ./backup.sh:/backup.sh:ro
+        command: >
+            sh -c "
+                echo '0 3 * * * /backup.sh' | crontab - &&
+                crond -f -l 2
+            "
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+volumes:
+    postgres_data:
