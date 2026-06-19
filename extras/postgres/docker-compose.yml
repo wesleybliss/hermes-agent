@@ -41,8 +41,8 @@ services:
             #PGPASSWORD: postgres
             PGDATABASE: local
         volumes:
-            - ./backups:/backups
-            - ./backup.sh:/backup.sh:ro
+            - ./backups:/backups:Z
+            - ./backup.sh:/backup.sh:ro,Z
         command: >
             sh -c "
                 /backup.sh &&
