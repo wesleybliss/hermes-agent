@@ -45,6 +45,7 @@ services:
             - ./backup.sh:/backup.sh:ro
         command: >
             sh -c "
+                /backup.sh &&
                 echo '0 3 * * * /backup.sh' | crontab - &&
                 crond -f -l 2
             "
