@@ -35,6 +35,7 @@ services:
     backup:
         image: postgres:alpine
         container_name: pg-backup
+        env_file: .env
         environment:
             PGHOST: postgres
             PGUSER: postgres
