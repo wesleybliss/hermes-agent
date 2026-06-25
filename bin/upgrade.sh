@@ -27,7 +27,8 @@ fi
 
 # 1. Pull the absolute newest 'nousresearch/hermes-agent:latest' base layer
 echo "Pulling latest upstream base image..."
-podman compose pull hermes
+# podman compose pull hermes
+podman pull nousresearch/hermes-agent:latest
 
 # 2. Rebuild the image. 
 # We use --no-cache to force the container engine to run the "pip install" layer 
