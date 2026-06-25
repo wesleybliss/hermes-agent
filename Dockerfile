@@ -13,6 +13,7 @@ RUN apt-get update && \
         ffmpeg \
         libolm-dev \
         gcc \
+        python3-pip \
         pkg-config \
         libffi-dev \
         libssl-dev \
