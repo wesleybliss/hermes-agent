@@ -87,7 +87,7 @@ fi
 
 if [ $SERVICE_EXISTS == 1 ]; then
     echo "Skipping creating service. Manually review."
-    sed "s/TEMPLATE_USER/$1/g" ../extras/hermes.service.template
+    sed "s/TEMPLATE_USER/$1/g" ./extras/hermes.service.template
 else
     echo "Creating system service /etc/systemd/system/hermes.service"
     # /etc/systemd/system/hermes.service
