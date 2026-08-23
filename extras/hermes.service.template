@@ -1,0 +1,30 @@
+[Unit]
+Description=Hermes agent
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+User=TEMPLATE_USER
+Group=TEMPLATE_USER
+Type=simple
+ExecStart=/home/TEMPLATE_USER/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run
+WorkingDirectory=/home/TEMPLATE_USER/.hermes
+EnvironmentFile=/home/TEMPLATE_USER/.hermes/.env
+Environment="PATH=/home/TEMPLATE_USER/.hermes/hermes-agent/venv/bin:/home/TEMPLATE_USER/.hermes/hermes-agent/node_modules/.bin:/home/TEMPLATE_USER/.volta/bin:/home/TEMPLATE_USER/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="VIRTUAL_ENV=/home/TEMPLATE_USER/.hermes/hermes-agent/venv"
+Environment="HERMES_HOME=/home/TEMPLATE_USER/.hermes"
+Restart=always
+RestartSec=5
+RestartForceExitStatus=75
+RestartPreventExitStatus=78
+KillMode=mixed
+KillSignal=SIGTERM
+ExecReload=/bin/kill -USR1 $MAINPID
+ExecStopPost=-/home/TEMPLATE_USER/.hermes/hermes-agent/venv/bin/python -m gateway.cgroup_cleanup
+TimeoutStopSec=210
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
