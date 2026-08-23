@@ -13,6 +13,11 @@ if [ -z "$1" ] || [ "$1" == "--help" ]; then
     exit
 fi
 
+if [ ! -f "./extras/hermes.service.template" ]; then
+    echo "./extras/hermes.service.template not found. Run from repo root."
+    exit
+fi
+
 confirm() {
     printf "%s [y/N] " "$1"
     read -r response
@@ -86,7 +91,7 @@ if [ $SERVICE_EXISTS == 1 ]; then
 else
     echo "Creating system service /etc/systemd/system/hermes.service"
     # /etc/systemd/system/hermes.service
-    sed "s/TEMPLATE_USER/$1/g" ../extras/hermes.service.template > /etc/systemd/system/hermes.service
+    sed "s/TEMPLATE_USER/$1/g" ./extras/hermes.service.template > /etc/systemd/system/hermes.service
 fi
 
 echo "Reloading systemd daemon"
